@@ -39,7 +39,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 .filter(function (f) {
                     return f[1].qNum != 'NaN' && f[0].qNum != 'NaN';
                 });
-            if (numMeasure = 1) {
+            if (numMeasure == 1) {
                 var data = fdata.map(function (d) {
 
                     return {
@@ -673,159 +673,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 }
             });
 
-        var specvaricon = [{
-            filename: "speccausehighimp.png",
-            description: '<span title ="Special cause variation - improvement  (indicator where high is good)">Special cause variation - improvement...</span>',
-            alt: "Special cause variation - improvement  (indicator where high is good)"
-        }, {
-            filename: "speccausehighconc.png",
-            description: '<span title = "Special cause variation - cause for concern (indicator where high is a concern)">Special cause variation - cause for concern...</span>',
-            alt: 'Special cause variation - cause for concern (indicator where high is a concern)'
-        }, {
-            filename: "speccauselowconc.png",
-            description: '<span title = "Special cause variation - cause for concern (indicator where low is a concern)">Special cause variation - cause for concern...</span>',
-            alt: 'Special cause variation - cause for concern (indicator where low is a concern)'
-        }, {
-            filename: "speccauselowimp.png",
-            description: '<span title = "Special cause variation - improvement  (indicator where low is good)">Special cause variation - improvement...</span>',
-            alt: 'Special cause variation - improvement  (indicator where low is good)'
-        }, {
-            filename: "comcause.png",
-            description: "Common cause variation",
-            alt: "Common cause variation"
-
-        }, {
-            filename: "V-Purple Up.png",
-            description: "Common cause variation",
-            alt: "Common cause variation"
-        }, {
-            filename: "V-Purple Down.png",
-            description: "Common cause variation",
-            alt: "Common cause variation"
-        }
-        ];
-
-        var specindex;
-
-        if ((data[data.length - 1].check == 1 && higherbetternum > 1) || (data[data.length - 1].value > data[data.length - 1].currUCL && higherbetternum > 1)) {
-            specindex = 5;
-        } else if ((data[data.length - 1].check == -1 && higherbetternum > 1) || (data[data.length - 1].value < data[data.length - 1].currLCL && higherbetternum > 1)) {
-            specindex = 6;
-
-        } else if ((data[data.length - 1].asctrendcheck == 1 && higherbetternum > 1)) {
-            specindex = 5;
-        } else if ((data[data.length - 1].asctrendcheck == 1 && higherbetternum > 1)) {
-            specindex = 6;
-        } else if ((data[data.length - 1].check == 1 && higherbetter == true) || (data[data.length - 1].value > data[data.length - 1].currUCL && higherbetter == true)) {
-            specindex = 0;
-        } else if ((data[data.length - 1].check == -1 && higherbetter == false) || (data[data.length - 1].value < data[data.length - 1].currLCL && higherbetter == false)) {
-            specindex = 3;
-        } else if ((data[data.length - 1].check == 1 && higherbetter == false) || (data[data.length - 1].value > data[data.length - 1].currUCL && higherbetter == false)) {
-            specindex = 1;
-        } else if ((data[data.length - 1].check == -1 && higherbetter == true) || (data[data.length - 1].value < data[data.length - 1].currLCL && higherbetter == true)) {
-            specindex = 2;
-        } else if (data[data.length - 1].asctrendcheck == 1 && higherbetter == true) {
-            specindex = 0;
-        } else if (data[data.length - 1].asctrendcheck == -1 && higherbetter == false) {
-            specindex = 3;
-        } else if (data[data.length - 1].asctrendcheck == 1 && higherbetter == false) {
-            specindex = 1;
-        } else if (data[data.length - 1].asctrendcheck == -1 && higherbetter == true) {
-            specindex = 2;
-        } else if (data[data.length - 1].nearUCLCheck == 1 && higherbetter == true) {
-            specindex = 0;
-        } else if (data[data.length - 1].nearLCLCheck == 1 && higherbetter == true) {
-            specindex = 2;
-        } else if (data[data.length - 1].nearLCLCheck == 1 && higherbetter == false) {
-            specindex = 3;
-        } else if (data[data.length - 1].nearUCLCheck == 1 && higherbetter == false) {
-            specindex = 1;
-        }
-
-        else {
-            specindex = 4;
-        }
-
-        var targeticon = [{
-            filename: "consfail.png",
-            description: "The system is expected to consistently fail the target",
-            alt: "The system is expected to consistently fail the target"
-        }, {
-            filename: "conspass.png",
-            description: "The system is expected to consistently pass the target",
-            alt: "The system is expected to consistently pass the target"
-        }, {
-            filename: "randvar.png",
-            description: "The system may achieve or fail the target subject to random variation",
-            alt: "The system may achieve or fail the target subject to random variation"
-        }, {
-            filename: "recentpass.png",
-            description: '<span title ="Metric has (P)assed the target for the last 6 (or more) data points, but the control limits have not moved above/below the target">Metric has (P)assed the target for the last 6 (or more) data points...</span>',
-            alt: "Metric has (P)assed the target for the last 6 (or more) data points, but the control limits have not moved above/below the target"
-        }, {
-            filename: "recentfail.png",
-            description: '<span title = "Metric has (F)ailed the target for the last 6 (or more) data points, but the control limits have not moved above/below the target">Metric has (F)ailed the target for the last 6 (or more) data points... </span>',
-            alt: "Metric has (F)ailed the target for the last 6 (or more) data points, but the control limits have not moved above/below the target"
-        }
-        ];
-
-        var recentCount = 0;
-        for (var q = 1; q <= 6; q++) {
-            if ((higherbetter == true && data[data.length - q].value > targetvalue) || (higherbetter == false && data[data.length - q].value < targetvalue)) {
-                recentCount++;
-            } else if ((higherbetter == true && data[data.length - q].value < targetvalue) || (higherbetter == false && data[data.length - q].value > targetvalue)) {
-                recentCount--;
-            }
-        }
-
-
-        var targetindex;
-        if ((higherbetter == true && data[data.length - 1].currLCL > targetvalue) || (higherbetter == false && data[data.length - 1].currUCL < targetvalue)) {
-            targetindex = 1;
-        } else if ((higherbetter == true && data[data.length - 1].currUCL < targetvalue) || (higherbetter == false && data[data.length - 1].currLCL > targetvalue)) {
-            targetindex = 0;
-        } else if (recentCount == 6 && opt.extraAssurance == 1) {
-            targetindex = 3;
-        } else if (recentCount == -6 && opt.extraAssurance == 1) {
-            targetindex = 4;
-        }
-
-        else {
-            targetindex = 2;
-        }
-
-        //append icon for targets
-        if (showtarget == true) {
-            var targetimage = svg.append('image')
-                .attr('xlink:href', '/extensions/' + extName + '/' + targeticon[targetindex].filename)
-                .attr('width', margin.top)
-                .attr('height', margin.top)
-                .attr('x', width + margin.right - 40)
-                .attr('y', 0 - margin.top)
-                .append('svg:title')
-                .text(targeticon[targetindex].alt);
-        }
-        var causeimage = svg.append('image')
-            .attr('xlink:href', '/extensions/' + extName + '/' + specvaricon[specindex].filename)
-            .attr('width', margin.top)
-            .attr('height', margin.top)
-            .attr('x', width + margin.right - 80)
-            .attr('y', 0 - margin.top)
-            .append('svg:title')
-            .text(specvaricon[specindex].alt);
-
-        if (showtarget == true) {
-            if (formatTest.charAt(formatTest.length - 1) == '%') {
-                var targetText = d3.format('.2~%')(targetvalue);
-            } else {
-                targetText = targetvalue;
-            }
-            var targetAch = targeticon[targetindex].description;
-        } else {
-            var targetText = 'N/A';
-            var targetAch = 'N/A';
-        }
-
+        
         if (opt.tablewidth > 0) {
             var defTable = d3.select("#" + id).append("table")
                 .style("width", (opt.tablewidth - 10) + 'px')
@@ -834,14 +682,12 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 .style("top", '5px')
                 .style("right", '5px')
                 .attr("class", 'defList');
-            defTable.append("tr").append("th").text('Latest');
-            defTable.append("tr").append("td").text(data[data.length - 1].valText);
-            defTable.append("tr").append("th").text('Variance Type');
-            defTable.append("tr").append("td").html(specvaricon[specindex].description);
-            defTable.append("tr").append("th").text('Target');
-            defTable.append("tr").append("td").text(targetText);
-            defTable.append("tr").append("th").text('Target Achievement');
-            defTable.append("tr").append("td").html(targetAch);
+            defTable.append("tr").append("th").text('Chart Type');
+            defTable.append("tr").append("td").text((opt.ChartType.toUpperCase()) + ' Chart');
+            defTable.append("tr").append("th").text('Latest Value');
+            defTable.append("tr").append("td").text(data[data.length - 1].valText);  
+            defTable.append("tr").append("th").text('Latest Event');
+            defTable.append("tr").append("td").text(data[data.length - 1].dimText);
             if (opt.ShowDQ == 1) {
                 var DQSCol = 'grey';
                 var DQTCol = 'grey';

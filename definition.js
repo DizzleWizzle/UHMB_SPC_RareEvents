@@ -242,7 +242,7 @@ define([ './d3.min'], function (d3) {
 							about4: {
 								component: "link",
 								label: "GitHub for Extension",
-								url: "https://github.com/DizzleWizzle/UHMB_Qlik_FillInLater"
+								url: "https://github.com/DizzleWizzle/UHMB_SPC_RareEvents"
 							}
 						}
 					}

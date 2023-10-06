@@ -52,6 +52,23 @@ define([ './d3.min'], function (d3) {
 
 
 
+							},
+							BaselineFlag: {
+								type: "boolean",
+								label: "Use Baseline",
+								ref: "BaseLineFlag",
+								defaultValue: false
+							},
+							CalculationPoints: {
+								ref: "CalcPoints",
+								type: "string",
+								label: "Num Points for Baseline",
+								expression: "optional",
+								defaultValue: "200",
+								show: function (data) {
+									return data.BaseLineFlag;
+								}
+
 							}
 						}
 					}

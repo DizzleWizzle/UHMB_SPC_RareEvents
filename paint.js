@@ -168,17 +168,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
         return output + "</ul>";
     }
     //End tooltipbuilder function
-    function group(arr) {
-        return arr.reduce(function (res, obj) { // for each object obj in the array arr
-            var key = obj.Metric; // let key be the Metric
-            var newObj = obj; // create a new object based on the object obj
-            if (res[key]) // if res has a sub-array for the current key then...
-                res[key].push(newObj); // ... push newObj into that sub-array
-            else // otherwise...
-                res[key] = [newObj]; // ... create a new sub-array for this key that initially contain newObj
-            return res;
-        }, {});
-    }
+  
     function DrawChart(data, layout, w, h, id, opt) {
 
         //Use this to create the correct path for the images
@@ -511,17 +501,11 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 .text(opt.measurelabel);
         }
         //Title Text
-        var highertext = "lower is better";
-        if (higherbetter == true) {
-            highertext = "higher is better";
-        }
-        if (higherbetternum > 1) {
-            highertext = "neither higher or lower is better";
-        }
+        
 
-        var titletext = "*Mean and Control Limits calculated on full dataset within recalculation window, " + highertext;
+        var titletext = "*Mean and Control Limits calculated on full dataset within recalculation window";
         if (data.length >= opt.calcpoints && opt.calcpoints > 0) {
-            titletext = "*Mean and Control Limits (re)calculated on first " + opt.calcpoints + " points of data, " + highertext;
+            titletext = "*Mean and Control Limits (re)calculated on first " + opt.calcpoints + " points of data" ;
         }
         svg.append("text")
             .attr("transform", "translate(" + (2 - margin.left) + "," + (5 - margin.top) + ")")
@@ -613,25 +597,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
             .attr("width", width)
             .attr("height", height);
 
-        //	  var triangles = [];
-        //	  triangles.push({
-        //  		x: width/4,
-        //		y: height/2 +45
-        //	  });
 
-        //	  var arc = d3.symbol().type(d3.symbolTriangle);
-
-        //	  var TriLine = keysvg.selectAll('path')
-        //  		.data(triangles)
-        //  		.enter()
-        //  		.append('path')
-        //  		.attr('d', arc)
-        //  		.attr('fill', 'red')
-        //  		.attr('stroke', 'red')
-        //  		.attr('stroke-width', 1)
-        //  		.attr('transform', function(d) {
-        //    		return "translate(" + d.x + "," +d.y +")";
-        //  		});
 
         if (higherbetternum > 1) {
             keysvg.append("circle").attr("cx", width / 4).attr("cy", height / 2 - 15).attr("r", 6).attr("class", "dot").attr("class", "purple");
@@ -652,6 +618,20 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
         //	  keysvg.append("text").attr("x", 20 + width/4).attr("y", height/2 +45).text("Outside of Control Limits").style("font-size", "15px").attr("alignment-baseline","middle").attr("class", "keytext");
 
         var showkey = 0;
+        keysvg.on("click", function (d) {
+            if (showkey == 0) {
+                key.transition()
+                    .duration(500)
+                    .style("opacity", 0.75);
+                showkey = 1;
+            } else {
+                key.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+                showkey = 0;
+
+            }
+        });
         var keyimage = svg.append('image')
             .attr('xlink:href', '/extensions/' + extName + '/' + 'KeySmall.png')
             .attr('width', 20)

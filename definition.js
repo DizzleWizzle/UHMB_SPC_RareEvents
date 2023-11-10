@@ -53,6 +53,27 @@ define([ './d3.min'], function (d3) {
 
 
 							},
+							TChartUnits:{
+								ref: "TChartUnits",
+								type: "string",
+								label: "T Chart Units",
+								component: "buttongroup",
+								options: [{
+									value: "day",
+									label: "Days"
+									},
+									{
+									value: "hour",
+									label: "Hours"
+									},
+									{
+									value: "minute",
+									label: "Minutes"
+									}
+								],
+								defaultValue: "day"
+
+							},
 							BaselineFlag: {
 								type: "boolean",
 								label: "Use Baseline",

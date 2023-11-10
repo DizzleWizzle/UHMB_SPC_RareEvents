@@ -77,9 +77,20 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                         d.value = null;
                         d.valText = null;
                     }
-                    else {
-                        d.value = d.dim - data[i - 1].dim;
-                        d.valText = (d.dim - data[i - 1].dim).toString();
+                    else if (layout.TChartUnits== 'day' || layout.TChartUnits== null || layout.TChartUnits== '' ){
+                        d.value = Math.floor(d.dim) - Math.floor(data[i - 1].dim);
+                        d.valText = (Math.floor(d.dim) - Math.floor(data[i - 1].dim)).toString();
+                        
+                    }
+                    else if (layout.TChartUnits== 'hour'){
+                        d.value = Math.floor(d.dim*24) - Math.floor(data[i - 1].dim *24);
+                        d.valText = (Math.floor(d.dim*24) - Math.floor(data[i - 1].dim*24)).toString();
+                        
+                    }
+                    else if (layout.TChartUnits== 'minute'){
+                        d.value = Math.floor(d.dim*1440) - Math.floor(data[i - 1].dim *1440);
+                        d.valText = (Math.floor(d.dim*1440) - Math.floor(data[i - 1].dim*1440)).toString();
+                        
                     }
                 }
 
@@ -87,10 +98,26 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
             //if T Chart remove first null value from chart
             if (ChartType == 't') {
                 data.splice(0,1);
+                if (layout.TChartUnits== 'day' || layout.TChartUnits== null || layout.TChartUnits== '' ){
+                    
+                    var labelopt = 'Days since last event';
+                }
+                else if (layout.TChartUnits== 'hour'){
+                   
+                    var labelopt = 'Hours since last event';
+                }
+                else if (layout.TChartUnits== 'minute'){
+                    
+                    var labelopt = 'Minutes since last event';
+                }
             }
 
             var measureLabel = layout.qHyperCube.qMeasureInfo[0].qFallbackTitle;
-            var dimLabel = layout.qHyperCube.qDimensionInfo[0].qFallbackTitle;
+            var dimLabel = layout.qHyperCube.qDimensionInfo[1].qFallbackTitle;
+            if(ChartType == 't'){
+                measureLabel = labelopt;
+
+            }
 
             var options = {
                 measurelabel: measureLabel,
@@ -124,7 +151,8 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 DQSystem: layout.DQSystem,
                 DQIconSize: layout.DQIconSize,
                 DQTextSize: layout.DQTextSize,
-                ChartType:layout.ChartType
+                ChartType:layout.ChartType,
+                TChartUnits: layout.TChartUnits
 
             };
 

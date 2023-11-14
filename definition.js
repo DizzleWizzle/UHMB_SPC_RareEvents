@@ -97,6 +97,13 @@ define([ './d3.min'], function (d3) {
 						type: "items",
 						label: "Formatting",
 						items:{
+							MinXAxisStep: {
+								ref: "XAxisStep",
+								type: "integer",
+								label: "Date tick seperation",
+								expression: "optional",
+								defaultValue: 30
+							},
 							ShowLabels: {
 								ref: "showLabels",
 								type: "boolean",

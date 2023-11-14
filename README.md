@@ -15,6 +15,7 @@ SPC Options:
 - Use Baseline & size of baseline
 
 Formatting:
+- Date Tick Seperation - minimum number pixels between ticks on the x-axis 
 - Hide/Show Labels
 - Hide X Axis
 - Date format for X Axis (see d3.js docs)

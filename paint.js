@@ -77,44 +77,44 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                         d.value = null;
                         d.valText = null;
                     }
-                    else if (layout.TChartUnits== 'day' || layout.TChartUnits== null || layout.TChartUnits== '' ){
+                    else if (layout.TChartUnits == 'day' || layout.TChartUnits == null || layout.TChartUnits == '') {
                         d.value = Math.floor(d.dim) - Math.floor(data[i - 1].dim);
                         d.valText = (Math.floor(d.dim) - Math.floor(data[i - 1].dim)).toString();
-                        
+
                     }
-                    else if (layout.TChartUnits== 'hour'){
-                        d.value = Math.floor(d.dim*24) - Math.floor(data[i - 1].dim *24);
-                        d.valText = (Math.floor(d.dim*24) - Math.floor(data[i - 1].dim*24)).toString();
-                        
+                    else if (layout.TChartUnits == 'hour') {
+                        d.value = Math.floor(d.dim * 24) - Math.floor(data[i - 1].dim * 24);
+                        d.valText = (Math.floor(d.dim * 24) - Math.floor(data[i - 1].dim * 24)).toString();
+
                     }
-                    else if (layout.TChartUnits== 'minute'){
-                        d.value = Math.floor(d.dim*1440) - Math.floor(data[i - 1].dim *1440);
-                        d.valText = (Math.floor(d.dim*1440) - Math.floor(data[i - 1].dim*1440)).toString();
-                        
+                    else if (layout.TChartUnits == 'minute') {
+                        d.value = Math.floor(d.dim * 1440) - Math.floor(data[i - 1].dim * 1440);
+                        d.valText = (Math.floor(d.dim * 1440) - Math.floor(data[i - 1].dim * 1440)).toString();
+
                     }
                 }
 
             });
             //if T Chart remove first null value from chart
             if (ChartType == 't') {
-                data.splice(0,1);
-                if (layout.TChartUnits== 'day' || layout.TChartUnits== null || layout.TChartUnits== '' ){
-                    
+                data.splice(0, 1);
+                if (layout.TChartUnits == 'day' || layout.TChartUnits == null || layout.TChartUnits == '') {
+
                     var labelopt = 'Days since last event';
                 }
-                else if (layout.TChartUnits== 'hour'){
-                   
+                else if (layout.TChartUnits == 'hour') {
+
                     var labelopt = 'Hours since last event';
                 }
-                else if (layout.TChartUnits== 'minute'){
-                    
+                else if (layout.TChartUnits == 'minute') {
+
                     var labelopt = 'Minutes since last event';
                 }
             }
 
             var measureLabel = layout.qHyperCube.qMeasureInfo[0].qFallbackTitle;
             var dimLabel = layout.qHyperCube.qDimensionInfo[1].qFallbackTitle;
-            if(ChartType == 't'){
+            if (ChartType == 't') {
                 measureLabel = labelopt;
 
             }
@@ -151,7 +151,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 DQSystem: layout.DQSystem,
                 DQIconSize: layout.DQIconSize,
                 DQTextSize: layout.DQTextSize,
-                ChartType:layout.ChartType,
+                ChartType: layout.ChartType,
                 TChartUnits: layout.TChartUnits
 
             };
@@ -196,7 +196,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
         return output + "</ul>";
     }
     //End tooltipbuilder function
-  
+
     function DrawChart(data, layout, w, h, id, opt) {
 
         //Use this to create the correct path for the images
@@ -213,7 +213,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
         var trendlength = opt.trendlength;
         var showtarget = ((opt.showtarget == 1) ? true : false);
         var targetvalue = parseFloat(opt.targetvalue);
-        var higherbetter =  true ;
+        var higherbetter = true;
         var showlabels = opt.showlabels;
         var clunderzero = ((opt.clunderzero == 1) ? true : false);
         var showRecalc = opt.showRecalc;
@@ -222,7 +222,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
         var HideXAxis = opt.HideXAxis;
 
         var Holding;
-        Holding = processDataArray(data, runlength, trendlength, clunderzero, opt.calcpoints, opt.within1sigma, opt.useBaseline,opt.ChartType);
+        Holding = processDataArray(data, runlength, trendlength, clunderzero, opt.calcpoints, opt.within1sigma, opt.useBaseline, opt.ChartType);
 
 
         //change margins if labels are being shown
@@ -354,7 +354,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
         //div for tooltip
         var TTWidth = Math.min(240, width / 2);
         var div = d3.select("#" + id).append("div")
-            .attr('id', 'valuetooltip_'+ layout.qInfo.qId) 
+            .attr('id', 'valuetooltip_' + layout.qInfo.qId)
             .attr("class", "UHMBtooltip")
             .style("opacity", 0)
             .style("width", TTWidth + "px");
@@ -463,13 +463,13 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                     div.html(opt.dimlabel + ": " + d.dimText + "<br/>" + //d.dim.getFullYear() + "-" + (d.dim.getMonth() + 1) + "-" + d.dim.getDate() + "<br/>" +
                         opt.measurelabel + ": " + TTValue + "<br/>"
                         + tooltipbuilder(d))
-                        .style("left",  TTLeft + "px"); //(d3.mouse(this)[0]+ margin.left)
+                        .style("left", TTLeft + "px"); //(d3.mouse(this)[0]+ margin.left)
 
                     var tooltipoffset;
                     if (parseInt(d3.select(this).attr("cy")) < height / 2) {
-                        tooltipoffset = (parseInt(d3.select(this).attr("cy")) + 30 +5 + "px");
+                        tooltipoffset = (parseInt(d3.select(this).attr("cy")) + 30 + 5 + "px");
                     } else {
-                        tooltipoffset = (y(d.value) + 30 - document.getElementById('valuetooltip_'+ layout.qInfo.qId).clientHeight  -5 + "px");
+                        tooltipoffset = (y(d.value) + 30 - document.getElementById('valuetooltip_' + layout.qInfo.qId).clientHeight - 5 + "px");
                     }
                     div.style("top", tooltipoffset);
                     d3.select(this).classed("highlight", true);
@@ -484,7 +484,30 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
             console.log(err);
         }
 
-        var xAxis = d3.axisBottom(x).tickFormat(d3.timeFormat(opt.dateformat));
+        var mintickintervals = layout.XAxisStep;
+        if (!mintickintervals) {
+            mintickintervals = 30;
+        }
+
+        //array of x dimension values for x axis values
+
+        var xArray = data.map(function (d, i) {
+
+            return d.dim;
+
+        })
+            ;
+        //remove duplicates (dates need more fannying about due to passing by reference)
+
+        xArray = xArray.filter((date, i, self) =>
+            self.findIndex(d => d.getTime() === date.getTime()) === i
+        );
+
+        xArray = xArray.filter((d, i) => i % Math.ceil(mintickintervals / (width / xArray.length)) == 0);
+
+        var xAxis = d3.axisBottom(x)
+            .tickFormat(d3.timeFormat(opt.dateformat))
+            .tickValues(xArray);
         // Add the X Axis
         svg.append("g")
             .attr("transform", "translate(0," + height + ")")
@@ -529,11 +552,11 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 .text(opt.measurelabel);
         }
         //Title Text
-        
+
 
         var titletext = "*Mean and Control Limits calculated on full dataset within recalculation window";
         if (data.length >= opt.calcpoints && opt.calcpoints > 0) {
-            titletext = "*Mean and Control Limits (re)calculated on first " + opt.calcpoints + " points of data" ;
+            titletext = "*Mean and Control Limits (re)calculated on first " + opt.calcpoints + " points of data";
         }
         svg.append("text")
             .attr("transform", "translate(" + (2 - margin.left) + "," + (5 - margin.top) + ")")
@@ -681,7 +704,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 }
             });
 
-        
+
         if (opt.tablewidth > 0) {
             var defTable = d3.select("#" + id).append("table")
                 .style("width", (opt.tablewidth - 10) + 'px')
@@ -693,7 +716,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
             defTable.append("tr").append("th").text('Chart Type');
             defTable.append("tr").append("td").text((opt.ChartType.toUpperCase()) + ' Chart');
             defTable.append("tr").append("th").text('Latest Value');
-            defTable.append("tr").append("td").text(data[data.length - 1].valText);  
+            defTable.append("tr").append("td").text(data[data.length - 1].valText);
             defTable.append("tr").append("th").text('Latest Event');
             defTable.append("tr").append("td").text(data[data.length - 1].dimText);
             if (opt.ShowDQ == 1) {

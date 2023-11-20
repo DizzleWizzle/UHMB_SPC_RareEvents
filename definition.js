@@ -118,13 +118,13 @@ define([ './d3.min'], function (d3) {
 								expression: "optional",
 								defaultValue: 0
 							},
-							DateFormat: {
-								ref: "dateFormat",
-								type: "string",
-								label: "Format for X axis",
-								expression: "optional",
-								defaultValue: "%d-%b-%Y"
-							},
+							// DateFormat: {
+							// 	ref: "dateFormat",
+							// 	type: "string",
+							// 	label: "Format for X axis",
+							// 	expression: "optional",
+							// 	defaultValue: "%d-%b-%Y"
+							// },
 							ShowRecal: {
 								ref: "showRecalc",
 								type: "integer",

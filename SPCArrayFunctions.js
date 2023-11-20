@@ -1,4 +1,4 @@
-function processDataArray(data, runlength=6, trendlength=7, clunderzero = false, calcpoints, within1sigma, useBaseline, type = 'xmr') {// opt){
+function processDataArray(data, runlength = 6, trendlength = 7, clunderzero = false, calcpoints, within1sigma, useBaseline, type = 'xmr') {// opt){
     var optSD = 3; //number of Sigma for CL's
     //var runlength = opt.runlength;
     //var trendlength = opt.trendlength;
@@ -25,7 +25,7 @@ function processDataArray(data, runlength=6, trendlength=7, clunderzero = false,
         if (trimmed.length >= calcpoints && calcpoints > 0 && useBaseline == true) {
             trimmed.length = calcpoints;
         }
-        if (type == 'xmr' ) {
+        if (type == 'xmr') {
             trimmed.forEach(function (d, i) {
 
                 if (i > 0) {
@@ -43,29 +43,29 @@ function processDataArray(data, runlength=6, trendlength=7, clunderzero = false,
             }
             var xSigma = xMR / 1.128;
         }
-        else if(type == 't'){
+        else if (type == 't') {
             trimmed.forEach(function (d, i) {
 
-                d.tValue = Math.pow(d.value,1/3.6);
+                d.tValue = Math.pow(d.value, 1 / 3.6);
                 if (i > 0) {
-                    d.MR = Math.abs(Math.pow(d.value,1/3.6) - Math.pow(trimmed[i - 1].value,1/3.6));
-                    
+                    d.MR = Math.abs(Math.pow(d.value, 1 / 3.6) - Math.pow(trimmed[i - 1].value, 1 / 3.6));
+
                 }
 
             });
-            var xAvg = Math.pow(d3.mean(getFields(trimmed, "tValue")),3.6);
+            var xAvg = Math.pow(d3.mean(getFields(trimmed, "tValue")), 3.6);
             var xMR = d3.mean(getFields(trimmed, "MR"));
-            var xUCL = Math.pow(d3.mean(getFields(trimmed, "tValue")) + (2.66 * xMR ),3.6);
+            var xUCL = Math.pow(d3.mean(getFields(trimmed, "tValue")) + (2.66 * xMR), 3.6);
             var xLCL = 0;//Math.pow(d3.mean(getFields(trimmed, "tValue")) - (2.66 * xMR ),3.6);
             var xSigma = xMR / 1.128;
 
 
-            
+
         }
-        else if(type == 'g'){
+        else if (type == 'g') {
             var gBar = d3.mean(getFields(trimmed, "value"));
             var xAvg = gBar * 0.693;
-            var xUCL = gBar + 3 * (Math.sqrt(gBar*(gBar +1)));
+            var xUCL = gBar + 3 * (Math.sqrt(gBar * (gBar + 1)));
             var xLCL = 0;//gBar - 3 * (Math.sqrt(gBar*(gBar +1)));
             var xMR = 0;
             var xSigma = 0;
@@ -117,7 +117,7 @@ function processDataArray(data, runlength=6, trendlength=7, clunderzero = false,
         prevValue = d.value;
 
     });
-    console.log(data);
+    // console.log(data);
     return Holding;
 }
 

@@ -9,6 +9,11 @@
 	"keywords": "qlik-sense, visualization",
 	"license": "",
 	"repository": "",
+	"bundle": {
+        "id": "UHMB-bundle",
+        "name": "UHMB extensions",
+        "description": "This is a set of extensions built in-house at UHMB"
+    },
 	"dependencies": {
 		"qlik-sense": ">=3.0.x"
 	}

@@ -136,7 +136,7 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 showlabels: layout.showLabels,
                 within1sigma: layout.runclosetomean,
                 clunderzero: layout.ClUnderZero,
-                dateformat: layout.dateFormat,
+                // dateformat: layout.dateFormat,
                 tablewidth: layout.tableWidth,
                 numMeasures: numMeasure,
                 showRecalc: layout.showRecalc,
@@ -253,17 +253,21 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
 
 
         // set the ranges
-        var x = d3.scalePoint()
+        var x = d3.scaleOrdinal()
             .domain(data.map(function (d) {
-                return d.dim
+                return d.id
             }))
-            .range([0, width]);
+            .range(data.map(function (d, i) {
+                return i * (width / data.length)
+            }));
+        //.range([0, width]);
+
         var y = d3.scaleLinear().range([height, 0]);
 
         // define the value line on the data
         var valueline = d3.line()
             .x(function (d) {
-                return x(d.dim);
+                return x(d.id);
             })
             .y(function (d) {
                 return y(d.value);
@@ -284,28 +288,28 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
         //define the lines for target, mean and Control Limits
         var targetline = d3.line()
             .x(function (d) {
-                return x(d.dim);
+                return x(d.id);
             })
             .y(function (d) {
                 return y(targetvalue);
             });
         var avgline = d3.line()
             .x(function (d) {
-                return x(d.dim);
+                return x(d.id);
             })
             .y(function (d) {
                 return y(d.currAvg);
             });
         var UCLline = d3.line()
             .x(function (d) {
-                return x(d.dim);
+                return x(d.id);
             })
             .y(function (d) {
                 return y(d.currUCL);
             });
         var LCLline = d3.line()
             .x(function (d) {
-                return x(d.dim);
+                return x(d.id);
             })
             .y(function (d) {
                 return y(d.currLCL);
@@ -367,12 +371,9 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
                 var colours = opt.recalColours.split(';');
             }
             Holding.forEach((region, i) => {
-                var MinX = x(d3.min(region, function (d) {
-                    return d.dim;
-                }));
-                var MaxX = x(d3.max(region, function (d) {
-                    return d.dim;
-                }));
+
+                var MinX = x(region.reduce((acc, curr) => curr.dim < acc.dim ? curr : acc, region[0] || undefined).id);
+                var MaxX = x(region.reduce((acc, curr) => curr.dim >= acc.dim ? curr : acc, region[0] || undefined).id);
 
                 svg.append('rect')
                     .attr('x', MinX)
@@ -489,24 +490,56 @@ define(["qlik", "jquery", "./d3.min", "./SPCArrayFunctions", "text!./UHMB-SPC_Ra
             mintickintervals = 30;
         }
 
-        //array of x dimension values for x axis values
+        //array of x dimension values for x axis values, hacked to make unique, damn d3 axis
 
         var xArray = data.map(function (d, i) {
 
-            return d.dim;
+            var filtered = i.toString().concat('||| ');
+            //var filtered = i.toString().concat('|||')
+            //.concat(d.dimText.toString());
+            try {
+                if (i % Math.ceil(mintickintervals / (width / data.length)) == 0) {
+                    filtered = i.toString().concat('|||')
+                        .concat(d.dimText.toString());
+
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+
+
+
+
+            return filtered;
 
         })
             ;
+
+
+
+
         //remove duplicates (dates need more fannying about due to passing by reference)
 
-        xArray = xArray.filter((date, i, self) =>
-            self.findIndex(d => d.getTime() === date.getTime()) === i
-        );
+        // xArray = xArray.filter((date, i, self) =>
+        //     self.findIndex(d => d.getTime() === date.getTime()) === i
+        // );
 
-        xArray = xArray.filter((d, i) => i % Math.ceil(mintickintervals / (width / xArray.length)) == 0);
+        //xArray = xArray.filter((d, i) => i % Math.ceil(mintickintervals / (width / xArray.length)) == 0);
 
         var xAxis = d3.axisBottom(x)
-            .tickFormat(d3.timeFormat(opt.dateformat))
+            // .tickFormat(d3.timeFormat(opt.dateformat))
+            // .tickFormat(function(d) {
+            //     var filtered = data.filter(function(e) {
+            //         console.log(d);
+            //         return e.id === d
+            //     });
+            //     return filtered[0].dimText;
+            // });
+            .tickFormat(function (d) {
+                var tidyArray = d.split('|||');
+                return tidyArray[1];
+            })
             .tickValues(xArray);
         // Add the X Axis
         svg.append("g")
